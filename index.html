@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAnalyzer Pro - Professional Kod Tahlil Tizimi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    </head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header-nav">
+        <div class="brand-logo">
+            <i class="fas fa-code"></i>
+            <span>CodeAnalyzer Pro</span>
+        </div>
+        
+        <nav class="main-menu">
+            <ul>
+                <li><a href="#features">Xususiyatlar</a></li>
+                <li><a href="#about">Biz haqimizda</a></li>
+                <li><a href="#contact">Aloqa</a></li>
+            </ul>
+        </nav>
+        
+        <div class="auth-buttons" id="authButtons">
+            <button class="btn btn-ghost" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Kirish
+            </button>
+            <button class="btn btn-main" id="registerBtn">
+                <i class="fas fa-user-plus"></i> Ro'yxatdan o'tish
+            </button>
+        </div>
+        
+        <div class="user-info" id="userInfo" style="display: none;">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+                <span id="usernameDisplay">User</span>
+            </div>
+            <button class="btn btn-main" id="adminPanelBtn" style="display: none;">
+                <i class="fas fa-cog"></i> Admin Panel
+            </button>
+            <button class="btn btn-ghost" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Chiqish
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Professional kod</span>
+                    <br>tahlil tizimi
+                </h1>
+                <p class="hero-subtitle">
+                    Eng zamonaviy xavfsizlik va kod sifati tahlili bilan loyihangizni 
+                    keyingi darajaga olib chiqing. AI-powered analizator bilan kod xatolarini 
+                    erta aniqlang.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn btn-main btn-large pulse-animation" onclick="startAnalysis()">
+                        <i class="fas fa-play"></i> Boshlash
+                    </button>
+                    <button class="btn btn-ghost btn-large" onclick="scrollToSection('features')">
+                        <i class="fas fa-info-circle"></i> Ko'proq ma'lumot
+                    </button>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Tahlil qilingan kod</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Aniqlik</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Mavjudlik</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="code-preview animate-float">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="code-filename">analyzer.py</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><code><span style="color: #ff79c6;">def</span> <span style="color: #50fa7b;">analyze_code</span>(<span style="color: #8be9fd;">code</span>):
+    <span style="color: #ff79c6;">return</span> {
+        <span style="color: #f1fa8c;">'security_issues'</span>: detect_vulnerabilities(code),
+        <span style="color: #f1fa8c;">'quality_score'</span>: calculate_quality(code),
+        <span style="color: #f1fa8c;">'suggestions'</span>: get_improvements(code)
+    }</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-background">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Xususiyatlar</h2>
+                <p class="section-subtitle">Eng zamonaviy texnologiyalar bilan kod tahlili</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Xavfsizlik Tahlili</h3>
+                    <p>SQL injection, XSS, va boshqa xavfsizlik xatolarini avtomatik aniqlash</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> OWASP Top 10 tekshiruvi</li>
+                        <li><i class="fas fa-check"></i> Real-time skaner</li>
+                        <li><i class="fas fa-check"></i> Batafsil hisobotlar</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Kod Sifati</h3>
+                    <p>Kod sifatini o'lchash va yaxshilash tavsiyalari berish</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Code complexity analizi</li>
+                        <li><i class="fas fa-check"></i> Performance monitoring</li>
+                        <li><i class="fas fa-check"></i> Best practices tekshiruvi</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-powered</h3>
+                    <p>Sun'iy intellekt bilan aqlli kod tahlili va tavsiyalar</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Machine learning algoritmlari</li>
+                        <li><i class="fas fa-check"></i> Pattern recognition</li>
+                        <li><i class="fas fa-check"></i> Smart suggestions</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Jamoa Ishi</h3>
+                    <p>Jamoaviy loyihalarda moslashuvchan ishlash imkoniyatlari</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Multi-user support</li>
+                        <li><i class="fas fa-check"></i> Role-based access</li>
+                        <li><i class="fas fa-check"></i> Collaborative reviews</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Tezkor Tahlil</h3>
+                    <p>Sekundlar ichida katta kod bazalarini tahlil qilish</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Parallel processing</li>
+                        <li><i class="fas fa-check"></i> Incremental analysis</li>
+                        <li><i class="fas fa-check"></i> Real-time feedback</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <h3>Hisobotlar</h3>
+                    <p>Batafsil hisobotlar va integratsiya imkoniyatlari</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> PDF/HTML export</li>
+                        <li><i class="fas fa-check"></i> API integration</li>
+                        <li><i class="fas fa-check"></i> Custom reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Analyzer Section -->
+    <section class="analyzer-section">
+        <div class="container">
+            <div class="analyzer-container">
+                <div class="analyzer-header">
+                    <h2>Kod Tahlilchisi</h2>
+                    <p>Kodingizni yuklang yoki kiriting va professional tahlil oling</p>
+                </div>
+                
+                <div class="analyzer-workspace">
+                    <div class="editor-panel">
+                        <div class="editor-toolbar">
+                            <div class="file-info">
+                                <i class="fas fa-file-code"></i>
+                                <span id="fileNameLabel">yangi_fayl.py</span>
+                            </div>
+                            <div class="editor-actions">
+                                <button class="btn btn-ghost btn-sm" onclick="clearEditor()">
+                                    <i class="fas fa-eraser"></i> Tozalash
+                                </button>
+                                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fas fa-file-upload"></i> Fayl yuklash
+                                </button>
+                                <input type="file" id="fileInput" style="display: none;" accept=".py,.js,.html,.css,.txt,.json,.xml,.php,.java,.cpp,.c,.h,.hpp,.cs,.rb,.go,.rs,.swift,.kt,.scala,.clj,.hs,.ml,.fs,.dart,.ts,.jsx,.tsx,.vue,.svelte">
+                            </div>
+                        </div>
+                        
+                        <div class="code-editor-wrapper">
+                            <textarea id="codeEditor" class="code-editor" placeholder="Bu yerga kodni kiriting yoki faylni yuklang..."># Kodni bu yerga kiriting
+def example_function():
+    print("Hello, World!")
+    return True
+
+# Yoki faylni yuqoridagi tugma orqali yuklang</textarea>
+                        </div>
+                        
+                        <div class="analysis-controls">
+                            <button class="btn btn-main btn-large" onclick="analyzeCode()" id="analyzeBtn">
+                                <i class="fas fa-search"></i> Tahlil qilish
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="results-panel">
+                        <div class="results-header">
+                            <h3>Tahlil Natijalari</h3>
+                            <div class="results-summary" id="resultsSummary">
+                                <span class="summary-item">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span id="errorCount">0</span> Xatolar
+                                </span>
+                                <span class="summary-item">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="warningCount">0</span> Ogohlantirishlar
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="results-content" id="resultsContent">
+                            <div class="empty-state">
+                                <i class="fas fa-code"></i>
+                                <p>Tahlil natijalari shu yerda ko'rsatiladi</p>
+                                <small>Kodni kiriting va "Tahlil qilish" tugmasini bosing</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentication Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content glass-effect">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Tizimga kirish</h2>
+                <p>Hisobingizga kiring</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Foydalanuvchi nomi yoki Email</label>
+                    <input type="text" id="loginUsername" required placeholder="Username yoki email">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Parol</label>
+                    <input type="password" id="loginPassword" required placeholder="Parol">
+                </div>
+                <button type="submit" class="btn btn-main btn-block" id="loginSubmitBtn">
+                    <i class="fas fa-sign-in-alt"></i> Kirish
+                </button>
+                <div class="form-footer">
+                    Hisobingiz yo'qmi? <a href="#" id="showRegister">Ro'yxatdan o'ting</a>
+                </div>
+                <div id="loginError" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content glass-effect">
+            <span class="close" id="closeRegisterModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</h2>
+                <p>Yangi hisob yarating</p>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Foydalanuvchi nomi</label>
+                    <input type="text" id="registerUsername" required minlength="3" placeholder="Kamida 3 ta belgi">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="registerEmail" required placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Parol</label>
+                    <input type="password" id="registerPassword" required minlength="6" placeholder="Kamida 6 ta belgi">
+                </div>
+                <button type="submit" class="btn btn-main btn-block" id="registerSubmitBtn">
+                    <i class="fas fa-user-plus"></i> Ro'yxatdan o'tish
+                </button>
+                <div class="form-footer">
+                    Hisobingiz bormi? <a href="#" id="showLogin">Kirish</a>
+                </div>
+                <div id="registerError" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-col">
+                    <h4><i class="fas fa-code"></i> CodeAnalyzer Pro</h4>
+                    <p>Professional kod tahlili va xavfsizlik skaneri</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Xususiyatlar</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Xavfsizlik tahlili</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Kod sifati</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> AI-powered</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Real-time skaner</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Resurslar</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> API Dokumentatsiya</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Qo'llanma</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Kompaniya</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Biz haqimizda</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Jamoa</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Karer</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Aloqa</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 CodeAnalyzer Pro. Barcha huquqlar himoyalangan.</p>
+                <p>Made with <i class="fas fa-heart" style="color: var(--error-red);"></i> in Uzbekistan</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        let currentUser = null;
+        let authToken = null;
+
+        // Load saved user session
+        function loadUserSession() {
+            const savedToken = localStorage.getItem('authToken');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (savedToken && savedUser) {
+                authToken = savedToken;
+                currentUser = JSON.parse(savedUser);
+                updateUIForLoggedInUser();
+            }
+        }
+
+        // Save user session
+        function saveUserSession(token, user) {
+            authToken = token;
+            currentUser = user;
+            localStorage.setItem('authToken', token);
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            updateUIForLoggedInUser();
+        }
+
+        // Clear user session
+        function clearUserSession() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            updateUIForLoggedOutUser();
+        }
+
+        // Update UI for logged in user
+        function updateUIForLoggedInUser() {
+            document.getElementById('authButtons').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('usernameDisplay').textContent = currentUser.username;
+            
+            // Show admin panel button if user is admin
+            const adminBtn = document.getElementById('adminPanelBtn');
+            if (currentUser.role === 'admin') {
+                adminBtn.style.display = 'inline-block';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+        }
+
+        // Update UI for logged out user
+        function updateUIForLoggedOutUser() {
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Show error message
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast success';
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // API call helper
+        async function apiCall(endpoint, options = {}) {
+            const url = `${API_BASE}${endpoint}`;
+            console.log('API Call URL:', url);
+            console.log('API Call Config:', options);
+            
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(authToken && { 'Authorization': `Bearer ${authToken}` })
+                },
+                ...options
+            };
+
+            try {
+                console.log('Making fetch request to:', url);
+                const response = await fetch(url, config);
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'API request failed');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Authentication handlers
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            
+            // Show loading state
+            submitBtn.innerHTML = '<div class="loading-spinner"></div> Kirish...';
+            submitBtn.disabled = true;
+            
+            try {
+                const data = await apiCall('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                saveUserSession(data.token, data.user);
+                hideModal('loginModal');
+                showSuccess('Muvaffaqiyatli tizimga kirdingiz!');
+                
+                // Role-based redirect
+                if (data.user.role === 'admin') {
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 1500);
+                } else {
+                    // User stays on index.html (current page)
+                    // No redirect needed for regular users
+                }
+            } catch (error) {
+                showError('loginError', 'Kirish xatosi: ' + error.message);
+            } finally {
+                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Kirish';
+                submitBtn.disabled = false;
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const submitBtn = document.getElementById('registerSubmitBtn');
+            
+            // Show loading state
+            submitBtn.innerHTML = '<div class="loading-spinner"></div> Ro\'yxatdan o\'tish...';
+            submitBtn.disabled = true;
+            
+            try {
+                const data = await apiCall('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                saveUserSession(data.token, data.user);
+                hideModal('registerModal');
+                showSuccess('Muvaffaqiyatli ro\'yxatdan o\'tdingiz!');
+            } catch (error) {
+                showError('registerError', 'Ro\'yxatdan o\'tish xatosi: ' + error.message);
+            } finally {
+                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Ro\'yxatdan o\'tish';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Event listeners
+        document.getElementById('loginBtn').addEventListener('click', () => showModal('loginModal'));
+        document.getElementById('registerBtn').addEventListener('click', () => showModal('registerModal'));
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            clearUserSession();
+            showSuccess('Tizimdan chiqdingiz');
+        });
+        
+        // Admin panel button
+        document.getElementById('adminPanelBtn').addEventListener('click', () => {
+            console.log('Admin panel button clicked, current user:', currentUser);
+            console.log('Auth token exists:', !!authToken);
+            console.log('User role:', currentUser ? currentUser.role : 'no user');
+            
+            // Double-check user is admin before redirecting
+            if (currentUser && currentUser.role === 'admin') {
+                // Open admin panel in new window to ensure it loads properly
+                const adminUrl = window.location.origin + '/admin.html';
+                console.log('Opening admin panel at:', adminUrl);
+                window.open(adminUrl, '_blank');
+            } else {
+                alert('Admin panelga kirish uchun admin huquqi kerak!');
+            }
+        });
+        
+        document.getElementById('closeLoginModal').addEventListener('click', () => hideModal('loginModal'));
+        document.getElementById('closeRegisterModal').addEventListener('click', () => hideModal('registerModal'));
+        document.getElementById('showRegister').addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModal('loginModal');
+            showModal('registerModal');
+        });
+        document.getElementById('showLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModal('registerModal');
+            showModal('loginModal');
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                hideModal(e.target.id);
+            }
+        });
+
+        // Code analysis functions
+        function startAnalysis() {
+            document.getElementById('codeEditor').focus();
+            document.getElementById('codeEditor').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearEditor() {
+            document.getElementById('codeEditor').value = '';
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-code"></i>
+                    <p>Tahlil natijalari shu yerda ko'rsatiladi</p>
+                    <small>Kodni kiriting va "Tahlil qilish" tugmasini bosing</small>
+                </div>
+            `;
+            document.getElementById('errorCount').textContent = '0';
+            document.getElementById('warningCount').textContent = '0';
+        }
+
+        async function analyzeCode() {
+            const code = document.getElementById('codeEditor').value;
+            const filename = document.getElementById('fileNameLabel').textContent;
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            
+            if (!code.trim()) {
+                showSuccess('Iltimos, avval kod kiriting');
+                return;
+            }
+
+            // Show loading state
+            analyzeBtn.innerHTML = '<div class="loading-spinner"></div> Tahlil qilinmoqda...';
+            analyzeBtn.disabled = true;
+            
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Kod tahlil qilinmoqda...</p>
+                </div>
+            `;
+
+            try {
+                const data = await apiCall('/files/analyze', {
+                    method: 'POST',
+                    body: JSON.stringify({ code, filename })
+                });
+                
+                displayAnalysisResults(data.analysis);
+            } catch (error) {
+                document.getElementById('resultsContent').innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Tahlil xatosi</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Tahlil qilish';
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        function displayAnalysisResults(analysis) {
+            const resultsContent = document.getElementById('resultsContent');
+            const errorCount = document.getElementById('errorCount');
+            const warningCount = document.getElementById('warningCount');
+            
+            errorCount.textContent = analysis.errors || 0;
+            warningCount.textContent = analysis.warnings || 0;
+            
+            if (analysis.issues && analysis.issues.length > 0) {
+                resultsContent.innerHTML = analysis.issues.map(issue => `
+                    <div class="issue-card ${issue.severity}">
+                        <div class="issue-header">
+                            <span class="issue-type">
+                                <i class="fas fa-${issue.severity === 'error' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+                                ${issue.message}
+                            </span>
+                            <span class="issue-line">Line ${issue.line || 'N/A'}</span>
+                        </div>
+                        <p class="issue-description">${issue.description || 'No description available'}</p>
+                    </div>
+                `).join('');
+            } else {
+                resultsContent.innerHTML = `
+                    <div class="success-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Ajoyib!</h3>
+                        <p>Kodingizda hech qanday xatolik topilmadi.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // File upload handler
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('codeEditor').value = e.target.result;
+                    document.getElementById('fileNameLabel').textContent = file.name;
+                    showSuccess(`Fayl muvaffaqiyatli yuklandi: ${file.name}`);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Utility functions
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserSession();
+            
+            // Add smooth scroll behavior
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+
+        // Add toast styles dynamically
+        const toastStyles = `
+            .toast {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            }
+            .toast.success {
+                background: var(--success-green);
+            }
+            .toast.error {
+                background: var(--error-red);
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = toastStyles;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>

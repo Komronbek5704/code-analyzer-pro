@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Test - CodeAnalyzer Pro</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #020617;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #f8fafc;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #4f46e5;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: #020617;
+            border: 1px solid #334155;
+            cursor: pointer;
+            text-align: center;
+        }
+        .tab.active {
+            background: #6366f1;
+            border-color: #6366f1;
+        }
+        .tab:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        .tab:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔐 Authentication Test</h2>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('register')">Register</div>
+            <div class="tab" onclick="showTab('login')">Login</div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form">
+            <div class="form-group">
+                <label for="reg-username">Username:</label>
+                <input type="text" id="reg-username" placeholder="Enter username (min 3 chars)">
+            </div>
+            <div class="form-group">
+                <label for="reg-email">Email:</label>
+                <input type="email" id="reg-email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="reg-password">Password:</label>
+                <input type="password" id="reg-password" placeholder="Enter password (min 6 chars)">
+            </div>
+            <button onclick="testRegister()">Register User</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" style="display: none;">
+            <div class="form-group">
+                <label for="login-username">Username or Email:</label>
+                <input type="text" id="login-username" placeholder="Enter username or email">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" placeholder="Enter password">
+            </div>
+            <button onclick="testLogin()">Login</button>
+            <button onclick="testAdminLogin()">Login as Admin</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab:nth-child(${tab === 'register' ? '1' : '2'})`).classList.add('active');
+            
+            document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+            
+            clearResult();
+        }
+
+        function showResult(message, isSuccess = true) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+            resultDiv.textContent = message;
+        }
+
+        function clearResult() {
+            document.getElementById('result').textContent = '';
+            document.getElementById('result').className = 'result';
+        }
+
+        async function testRegister() {
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            if (!username || !email || !password) {
+                showResult('❌ All fields are required', false);
+                return;
+            }
+
+            if (username.length < 3) {
+                showResult('❌ Username must be at least 3 characters', false);
+                return;
+            }
+
+            if (password.length < 6) {
+                showResult('❌ Password must be at least 6 characters', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult(`✅ Registration successful!\n\nUser: ${data.user.username}\nEmail: ${data.user.email}\nToken: ${data.token.substring(0, 50)}...`, true);
+                } else {
+                    showResult(`❌ Registration failed: ${data.error}`, false);
+                }
+            } catch (error) {
+                showResult(`❌ Network error: ${error.message}`, false);
+            }
+        }
+
+        async function testLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!username || !password) {
+                showResult('❌ Username and password are required', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult(`✅ Login successful!\n\nUser: ${data.user.username}\nRole: ${data.user.role}\nToken: ${data.token.substring(0, 50)}...`, true);
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                } else {
+                    showResult(`❌ Login failed: ${data.error}`, false);
+                }
+            } catch (error) {
+                showResult(`❌ Network error: ${error.message}`, false);
+            }
+        }
+
+        async function testAdminLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: 'admin', password: 'admin123' })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult(`✅ Admin login successful!\n\nUser: ${data.user.username}\nRole: ${data.user.role}\nToken: ${data.token.substring(0, 50)}...`, true);
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                } else {
+                    showResult(`❌ Admin login failed: ${data.error}`, false);
+                }
+            } catch (error) {
+                showResult(`❌ Network error: ${error.message}`, false);
+            }
+        }
+
+        // Test API health on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ API Server is running!\n\nStatus: ${data.status}\nVersion: ${data.version}\nTime: ${data.timestamp}`, true);
+                } else {
+                    showResult('❌ API Server is not responding', false);
+                }
+            } catch (error) {
+                showResult(`❌ Cannot connect to API server: ${error.message}`, false);
+            }
+        });
+    </script>
+</body>
+</html>

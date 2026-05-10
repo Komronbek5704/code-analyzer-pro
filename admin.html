@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAnalyzer Pro - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        .admin-sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: var(--space-xl);
+            overflow-y: auto;
+        }
+        
+        .admin-main {
+            padding: var(--space-xl);
+            overflow-y: auto;
+        }
+        
+        .admin-sidebar .main-menu {
+            margin-top: 15px;
+        }
+        
+        .admin-sidebar .main-menu ul {
+            display: flex;
+            list-style: none;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+        
+        .activity-filters {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+        
+        .search-bar input[type="text"] {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid var(--bg-glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: var(--font-size-sm);
+            transition: var(--transition-normal);
+        }
+        
+        .search-bar input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+        
+        .search-bar input[type="text"]::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .search-bar select {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid var(--bg-glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+        
+        .search-bar select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+        
+        .search-bar select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid var(--bg-glass-border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-normal);
+        }
+        
+        .activity-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-glass);
+            border-radius: var(--radius-md);
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-user {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .activity-action {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: 2px;
+        }
+        
+        .activity-time {
+            color: var(--text-muted);
+            font-size: var(--font-size-xs);
+        }
+        
+        .language-stats {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .language-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .language-name {
+            width: 120px;
+            font-weight: 500;
+        }
+        
+        .language-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        
+        .language-progress {
+            height: 100%;
+            border-radius: var(--radius-full);
+            transition: var(--transition-normal);
+        }
+        
+        .language-percentage {
+            width: 40px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+        }
+        
+        .action-buttons .btn {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-xs);
+            min-width: auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-3xl);
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            text-align: center;
+            transition: var(--transition-normal);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-number {
+            font-size: var(--font-size-3xl);
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .users-table {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+        
+        .users-table thead {
+            background: var(--bg-tertiary);
+        }
+        
+        .users-table th,
+        .users-table td {
+            padding: var(--space-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .users-table tbody tr:hover {
+            background: var(--bg-glass);
+        }
+        
+        .status-badge {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-active {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+        
+        .status-inactive {
+            background: var(--error-glow);
+            color: var(--error);
+        }
+        
+        .role-badge {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+        
+        .role-admin {
+            background: var(--warning-glow);
+            color: var(--warning);
+        }
+        
+        .role-user {
+            background: var(--info-glow);
+            color: var(--info);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--space-sm);
+        }
+        
+        .btn-sm {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-xs);
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+        }
+        
+        .loading-content {
+            background: var(--bg-card);
+            padding: var(--space-2xl);
+            border-radius: var(--radius-xl);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Yuklanmoqda...</p>
+        </div>
+    </div>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="brand-logo">
+                <i class="fas fa-code"></i>
+                <span>Admin Panel</span>
+            </div>
+            
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="#" class="active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a></li>
+                    <li><a href="#" data-section="users">
+                        <i class="fas fa-users"></i> Foydalanuvchilar
+                    </a></li>
+                    <li><a href="#" data-section="activity">
+                        <i class="fas fa-history"></i> Faoliyat
+                    </a></li>
+                    <li><a href="#" data-section="analytics">
+                        <i class="fas fa-chart-bar"></i> Analitika
+                    </a></li>
+                    <li><a href="#" data-section="settings">
+                        <i class="fas fa-cog"></i> Sozlamalar
+                    </a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-info" style="margin-top: var(--space-2xl); padding-top: var(--space-lg); border-top: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: 10px;">
+                    <i class="fas fa-user-circle" style="font-size: var(--font-size-2xl); color: var(--text-secondary);"></i>
+                    <div>
+                        <div style="font-weight: 600;" id="adminUsername">Admin</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Administrator</div>
+                    </div>
+                </div>
+                <button class="btn btn-ghost" id="adminLogoutBtn" style="width: 100%;">
+                    <i class="fas fa-sign-out-alt"></i> Chiqish
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section-content">
+                <h2 style="margin-bottom: var(--space-xl);">Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">Jami Foydalanuvchilar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeUsers">0</div>
+                        <div class="stat-label">Faol Foydalanuvchilar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAnalyses">0</div>
+                        <div class="stat-label">Jami Tahlillar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgQuality">0%</div>
+                        <div class="stat-label">O'rtacha Sifat</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="users-section" class="section-content" style="display: none;">
+                <h2 style="margin-bottom: var(--space-xl);">Foydalanuvchilar Boshqaruvi</h2>
+                
+                <div class="search-bar">
+                    <input type="text" id="userSearchInput" class="search-input" placeholder="Foydalanuvchi qidirish...">
+                    <button class="btn btn-main" onclick="searchUsers()">
+                        <i class="fas fa-search"></i> Qidirish
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Foydalanuvchi</th>
+                                <th>Email</th>
+                                <th>Ro'yxatdan o'tgan</th>
+                                <th>Oxirgi kirish</th>
+                                <th>Status</th>
+                                <th>Rol</th>
+                                <th>Tahlillar</th>
+                                <th>Xatolar</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="usersPagination" style="margin-top: var(--space-lg); text-align: center;">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div id="activity-section" class="section-content" style="display: none;">
+                <h2 style="margin-bottom: var(--space-xl);">Foydalanuvchi Faoliyati</h2>
+                
+                <div class="activity-filters">
+                    <div class="search-bar">
+                        <input type="text" id="activitySearch" placeholder="Foydalanuvchi qidirish...">
+                        <select id="activityType">
+                            <option value="all">Barcha Faoliyatlar</option>
+                            <option value="login">Tizimga Kirish</option>
+                            <option value="analysis">Kod Tahlili</option>
+                            <option value="upload">Fayl Yuklash</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-sign-in-alt" style="color: var(--success);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-user">admin</div>
+                            <div class="activity-action">Tizimga kirdi</div>
+                            <div class="activity-time">2 daqiqa oldin</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-code" style="color: var(--primary);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-user">user1</div>
+                            <div class="activity-action">Python kodini tahlil qildi</div>
+                            <div class="activity-time">15 daqiqa oldin</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-file-upload" style="color: var(--warning);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-user">user2</div>
+                            <div class="activity-action">JavaScript faylini yukladi</div>
+                            <div class="activity-time">1 soat oldin</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-chart-line" style="color: var(--accent);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-user">admin</div>
+                            <div class="activity-action">Analitika bo'limini ko'rdi</div>
+                            <div class="activity-time">2 soat oldin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" class="section-content" style="display: none;">
+                <h2 style="margin-bottom: var(--space-xl);">Analitika va Statistika</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="newUsersThisMonth">47</div>
+                        <div class="stat-label">Bu oyda ro'yxatdan o'tganlar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="analysesThisMonth">328</div>
+                        <div class="stat-label">Bu oyda tahlillar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalErrors">156</div>
+                        <div class="stat-label">Jami Xatolar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalWarnings">892</div>
+                        <div class="stat-label">Jami Ogohlantirishlar</div>
+                    </div>
+                </div>
+                
+                <div class="analytics-charts" style="margin-top: var(--space-2xl);">
+                    <div class="card">
+                        <h3 style="margin-bottom: var(--space-lg);">Tahlillar Statistikasi (Oylik)</h3>
+                        <div class="chart-placeholder">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 200px; padding: var(--space-md);">
+                                <div style="flex: 1; background: var(--primary); height: 60%; margin: 0 2px;"></div>
+                                <div style="flex: 1; background: var(--primary); height: 80%; margin: 0 2px;"></div>
+                                <div style="flex: 1; background: var(--primary); height: 45%; margin: 0 2px;"></div>
+                                <div style="flex: 1; background: var(--primary); height: 90%; margin: 0 2px;"></div>
+                                <div style="flex: 1; background: var(--primary); height: 70%; margin: 0 2px;"></div>
+                                <div style="flex: 1; background: var(--primary); height: 85%; margin: 0 2px;"></div>
+                                <div style="flex: 1; background: var(--accent); height: 100%; margin: 0 2px;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0 var(--space-md) var(--space-md); font-size: var(--font-size-xs); color: var(--text-muted);">
+                                <span>Yan</span>
+                                <span>Fev</span>
+                                <span>Mar</span>
+                                <span>Apr</span>
+                                <span>May</span>
+                                <span>Iyun</span>
+                                <span>Iyul</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: var(--space-xl);">
+                        <h3 style="margin-bottom: var(--space-lg);">Dasturlash Tillari Bo'yicha Tahlillar</h3>
+                        <div class="language-stats">
+                            <div class="language-item">
+                                <div class="language-name">JavaScript</div>
+                                <div class="language-bar">
+                                    <div class="language-progress" style="width: 35%; background: var(--warning);"></div>
+                                </div>
+                                <div class="language-percentage">35%</div>
+                            </div>
+                            <div class="language-item">
+                                <div class="language-name">Python</div>
+                                <div class="language-bar">
+                                    <div class="language-progress" style="width: 28%; background: var(--primary);"></div>
+                                </div>
+                                <div class="language-percentage">28%</div>
+                            </div>
+                            <div class="language-item">
+                                <div class="language-name">Java</div>
+                                <div class="language-bar">
+                                    <div class="language-progress" style="width: 20%; background: var(--error);"></div>
+                                </div>
+                                <div class="language-percentage">20%</div>
+                            </div>
+                            <div class="language-item">
+                                <div class="language-name">C++</div>
+                                <div class="language-bar">
+                                    <div class="language-progress" style="width: 10%; background: var(--success);"></div>
+                                </div>
+                                <div class="language-percentage">10%</div>
+                            </div>
+                            <div class="language-item">
+                                <div class="language-name">Boshqalar</div>
+                                <div class="language-bar">
+                                    <div class="language-progress" style="width: 7%; background: var(--accent);"></div>
+                                </div>
+                                <div class="language-percentage">7%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="section-content" style="display: none;">
+                <h2 style="margin-bottom: var(--space-xl);">Sozlamalar</h2>
+                
+                <div class="card">
+                    <h3 style="margin-bottom: var(--space-lg);">Tizim Sozlamalari</h3>
+                    
+                    <div class="form-group">
+                        <label>Ro'yxatdan o'tish yoqilgan</label>
+                        <select id="registrationEnabled" class="form-group input">
+                            <option value="true">Yoqilgan</option>
+                            <option value="false">O'chirilgan</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Maksimal fayl hajmi (MB)</label>
+                        <input type="number" id="maxFileSize" class="form-group input" value="10" min="1" max="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Kunlik tahlil limiti</label>
+                        <input type="number" id="dailyAnalysisLimit" class="form-group input" value="50" min="1" max="1000">
+                    </div>
+                    
+                    <button class="btn btn-main" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Saqlash
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content glass-effect">
+            <span class="close" id="closeUserModal">&times;</span>
+            <h2 style="margin-bottom: var(--space-lg);">Foydalanuvchi Tafsilotlari</h2>
+            
+            <div id="userDetails">
+                <!-- User details will be loaded here -->
+            </div>
+            
+            <div class="action-buttons" style="margin-top: var(--space-lg);">
+                <button class="btn btn-error" id="blockUserBtn">
+                    <i class="fas fa-ban"></i> Bloklash
+                </button>
+                <button class="btn btn-success" id="unblockUserBtn" style="display: none;">
+                    <i class="fas fa-check"></i> Faollashtirish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize admin panel
+        (function() {
+            // Global variables
+            let currentUser = null;
+            let authToken = null;
+            let currentPage = 1;
+            let totalPages = 1;
+            const API_BASE = 'http://localhost:3001/api';
+
+            // Load saved user session
+            function loadUserSession() {
+                const savedToken = localStorage.getItem('authToken');
+                const savedUser = localStorage.getItem('currentUser');
+                
+                console.log('Loading admin session...');
+                console.log('Saved token:', savedToken ? 'exists' : 'missing');
+                console.log('Saved user:', savedUser ? 'exists' : 'missing');
+                
+                if (savedToken && savedUser) {
+                    authToken = savedToken;
+                    currentUser = JSON.parse(savedUser);
+                    
+                    console.log('User loaded:', currentUser);
+                    
+                    // Check if user is admin
+                    if (currentUser.role !== 'admin') {
+                        alert('Admin panelga kirish uchun admin huquqi kerak!');
+                        window.location.href = '/index.html';
+                        return;
+                    }
+                    
+                    document.getElementById('adminUsername').textContent = currentUser.username;
+                    loadDashboardData();
+                } else {
+                    console.log('No saved session, redirecting to login...');
+                    // Redirect to login if not authenticated
+                    window.location.href = '/index.html';
+                }
+            }
+
+            // API call helper
+            async function apiCall(endpoint, options = {}) {
+                const url = `${API_BASE}${endpoint}`;
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    ...options
+                };
+
+                try {
+                    const response = await fetch(url, config);
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || 'API request failed');
+                    }
+                    
+                    return data;
+                } catch (error) {
+                    console.error('API Error:', error);
+                    throw error;
+                }
+            }
+
+            // Navigation between sections
+            document.querySelectorAll('.main-menu a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = e.target.closest('a').dataset.section;
+                    showSection(section);
+                    
+                    // Update active menu item
+                    document.querySelectorAll('.main-menu a').forEach(a => a.classList.remove('active'));
+                    e.target.closest('a').classList.add('active');
+                });
+            });
+
+            function showSection(sectionName) {
+                // Hide all sections
+                document.querySelectorAll('.section-content').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show selected section
+                document.getElementById(`${sectionName}-section`).style.display = 'block';
+                
+                // Load section data
+                switch(sectionName) {
+                    case 'dashboard':
+                        loadDashboardData();
+                        break;
+                    case 'users':
+                        loadUsers();
+                        break;
+                    case 'activity':
+                        loadActivity();
+                        break;
+                    case 'analytics':
+                        loadAnalytics();
+                        break;
+                }
+            }
+
+            // Load dashboard statistics
+            async function loadDashboardData() {
+                try {
+                    showLoading(true);
+                    console.log('Loading dashboard data...');
+                    const stats = await apiCall('/admin/dashboard');
+                    console.log('Dashboard stats received:', stats);
+                    updateDashboardStats(stats);
+                } catch (error) {
+                    console.error('Error loading dashboard:', error);
+                    alert('Dashboard yuklashda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function updateDashboardStats(stats) {
+                document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+                document.getElementById('activeUsers').textContent = stats.activeUsers || 0;
+                document.getElementById('totalAnalyses').textContent = stats.totalAnalyses || 0;
+                document.getElementById('avgQuality').textContent = (stats.avgQualityScore || 0) + '%';
+            }
+
+            // Load users
+            async function loadUsers(page = 1, search = '') {
+                try {
+                    showLoading(true);
+                    const data = await apiCall(`/admin/users?page=${page}&search=${encodeURIComponent(search)}`);
+                    displayUsers(data.users);
+                    updatePagination(data.pagination);
+                } catch (error) {
+                    console.error('Error loading users:', error);
+                    showError('Foydalanuvchilarni yuklashda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function displayUsers(users) {
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-user-circle" style="color: var(--text-secondary);"></i>
+                                <span>${user.username}</span>
+                            </div>
+                        </td>
+                        <td>${user.email}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString('uz-UZ')}</td>
+                        <td>${user.last_login ? new Date(user.last_login).toLocaleDateString('uz-UZ') : 'Hech qachon'}</td>
+                        <td>
+                            <span class="status-badge ${user.is_active ? 'status-active' : 'status-inactive'}">
+                                ${user.is_active ? 'Faol' : 'Nofaol'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="role-badge ${user.role === 'admin' ? 'role-admin' : 'role-user'}">
+                                ${user.role === 'admin' ? 'Admin' : 'User'}
+                            </span>
+                        </td>
+                        <td>${user.total_analyses || 0}</td>
+                        <td>${user.total_errors || 0}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-ghost" onclick="viewUserDetails(${user.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm ${user.is_active ? 'btn-warning' : 'btn-success'}" 
+                                        onclick="toggleUserStatus(${user.id}, ${!user.is_active})">
+                                    <i class="fas fa-${user.is_active ? 'ban' : 'check'}"></i>
+                                </button>
+                                <button class="btn btn-sm btn-error" onclick="deleteUser(${user.id})" 
+                                        ${user.id === currentUser?.id ? 'disabled' : ''}>
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function updatePagination(pagination) {
+                currentPage = pagination.page;
+                totalPages = pagination.totalPages;
+                
+                const paginationDiv = document.getElementById('usersPagination');
+                paginationDiv.innerHTML = `
+                    <div style="display: flex; justify-content: center; align-items: center; gap: var(--space-md);">
+                        <button class="btn btn-sm btn-ghost" onclick="loadUsers(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span>Page ${currentPage} of ${totalPages}</span>
+                        <button class="btn btn-sm btn-ghost" onclick="loadUsers(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                `;
+            }
+
+            // Search users
+            function searchUsers() {
+                const searchTerm = document.getElementById('userSearchInput').value;
+                loadUsers(1, searchTerm);
+            }
+
+            // View user details
+            async function viewUserDetails(userId) {
+                try {
+                    showLoading(true);
+                    const user = await apiCall(`/admin/users/${userId}`);
+                    displayUserDetails(user);
+                    document.getElementById('userModal').style.display = 'flex';
+                } catch (error) {
+                    console.error('Error loading user details:', error);
+                    showError('Foydalanuvchi ma\'lumotlarini yuklashda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function displayUserDetails(user) {
+                const detailsDiv = document.getElementById('userDetails');
+                detailsDiv.innerHTML = `
+                    <div style="display: grid; gap: var(--space-md);">
+                        <div><strong>ID:</strong> ${user.id}</div>
+                        <div><strong>Foydalanuvchi:</strong> ${user.username}</div>
+                        <div><strong>Email:</strong> ${user.email}</div>
+                        <div><strong>Rol:</strong> ${user.role}</div>
+                        <div><strong>Status:</strong> ${user.is_active ? 'Faol' : 'Nofaol'}</div>
+                        <div><strong>Ro\'yxatdan o\'tgan:</strong> ${new Date(user.created_at).toLocaleString('uz-UZ')}</div>
+                        <div><strong>Oxirgi kirish:</strong> ${user.last_login ? new Date(user.last_login).toLocaleString('uz-UZ') : 'Hech qachon'}</div>
+                        <div><strong>Jami tahlillar:</strong> ${user.total_analyses || 0}</div>
+                        <div><strong>Jami xatolar:</strong> ${user.total_errors || 0}</div>
+                    </div>
+                `;
+                
+                // Update action buttons
+                const blockBtn = document.getElementById('blockUserBtn');
+                const unblockBtn = document.getElementById('unblockUserBtn');
+                
+                if (user.is_active) {
+                    blockBtn.style.display = 'inline-flex';
+                    blockBtn.onclick = () => toggleUserStatus(user.id, false);
+                    unblockBtn.style.display = 'none';
+                } else {
+                    blockBtn.style.display = 'none';
+                    unblockBtn.style.display = 'inline-flex';
+                    unblockBtn.onclick = () => toggleUserStatus(user.id, true);
+                }
+            }
+
+            // Toggle user status
+            async function toggleUserStatus(userId, isActive) {
+                const action = isActive ? 'faollashtirish' : 'bloklash';
+                if (!confirm(`Foydalanuvchini ${action}ni tasdiqlaysizmi?`)) {
+                    return;
+                }
+
+                try {
+                    showLoading(true);
+                    await apiCall(`/admin/users/${userId}/status`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ is_active: isActive })
+                    });
+                    loadUsers(currentPage, document.getElementById('userSearchInput').value);
+                    document.getElementById('userModal').style.display = 'none';
+                    showSuccess(`Foydalanuvchi muvaffaqiyatli ${action}landi`);
+                } catch (error) {
+                    console.error('Error toggling user status:', error);
+                    showError('Xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            // Load activity
+            async function loadActivity() {
+                try {
+                    showLoading(true);
+                    const data = await apiCall('/admin/activities');
+                    displayActivity(data.activities);
+                } catch (error) {
+                    console.error('Error loading activity:', error);
+                    showError('Faoliyatni yuklashda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function displayActivity(activities) {
+                const activityDiv = document.getElementById('activityList');
+                
+                if (activities.length === 0) {
+                    activityDiv.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Faoliyat yo\'q</p>';
+                    return;
+                }
+                
+                activityDiv.innerHTML = activities.map(activity => `
+                    <div class="card" style="margin-bottom: var(--space-lg);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h4 style="margin-bottom: var(--space-sm);">${activity.description}</h4>
+                                <p style="color: var(--text-secondary); font-size: var(--font-size-sm);">
+                                    <strong>Foydalanuvchi:</strong> ${activity.username}<br>
+                                    <strong>Vaqt:</strong> ${new Date(activity.created_at).toLocaleString('uz-UZ')}
+                                </p>
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="status-badge status-${activity.type === 'error' ? 'inactive' : 'active'}">
+                                    ${activity.type}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Load analytics
+            async function loadAnalytics() {
+                try {
+                    showLoading(true);
+                    const stats = await apiCall('/admin/statistics');
+                    updateAnalytics(stats);
+                } catch (error) {
+                    console.error('Error loading analytics:', error);
+                    showError('Analitikani yuklashda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function updateAnalytics(stats) {
+                document.getElementById('newUsersThisMonth').textContent = stats.newUsersThisMonth || 0;
+                document.getElementById('analysesThisMonth').textContent = stats.analysesThisMonth || 0;
+                document.getElementById('totalErrors').textContent = stats.totalErrors || 0;
+                document.getElementById('totalWarnings').textContent = stats.totalWarnings || 0;
+            }
+
+            // Settings
+            async function saveSettings() {
+                const settings = {
+                    registration_enabled: document.getElementById('registrationEnabled').value === 'true',
+                    max_file_size: parseInt(document.getElementById('maxFileSize').value),
+                    daily_analysis_limit: parseInt(document.getElementById('dailyAnalysisLimit').value)
+                };
+
+                try {
+                    showLoading(true);
+                    await apiCall('/admin/settings', {
+                        method: 'PUT',
+                        body: JSON.stringify(settings)
+                    });
+                    showSuccess('Sozlamalar muvaffaqiyatli saqlandi');
+                } catch (error) {
+                    console.error('Error saving settings:', error);
+                    showError('Sozlamalarni saqlashda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            // User management functions
+            async function toggleUserStatus(userId, isActive) {
+                try {
+                    showLoading(true);
+                    const data = await apiCall(`/admin/users/${userId}/status`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ is_active: isActive })
+                    });
+                    showSuccess(`Foydalanuvchi muvaffaqiyatli ${isActive ? 'aktivlashtirildi' : 'bloklandi'}`);
+                    loadUsers(); // Reload users list
+                } catch (error) {
+                    console.error('Error toggling user status:', error);
+                    showError('Foydalanuvchi holatini o\'zgartirishda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            async function deleteUser(userId) {
+                if (!confirm('Ushbu foydalanuvchini o\'chirishni istaysizmi? Barcha ma\'lumotlari o\'chiriladi.')) {
+                    return;
+                }
+
+                try {
+                    showLoading(true);
+                    const data = await apiCall(`/admin/users/${userId}`, {
+                        method: 'DELETE'
+                    });
+                    showSuccess('Foydalanuvchi muvaffaqiyatli o\'chirildi');
+                    loadUsers(); // Reload users list
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    showError('Foydalanuvchini o\'chirishda xatolik: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function viewUserDetails(userId) {
+                // Implement user details modal or navigation
+                console.log('View user details:', userId);
+                // Could open a modal with detailed user information
+            }
+
+            // Utility functions
+            function showLoading(show) {
+                document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+            }
+
+            function showError(message) {
+                alert('Xatolik: ' + message);
+            }
+
+            function showSuccess(message) {
+                alert('Muvaffaqiyat: ' + message);
+            }
+
+            // Modal close
+            document.getElementById('closeUserModal').addEventListener('click', () => {
+                document.getElementById('userModal').style.display = 'none';
+            });
+
+            // Admin logout function
+            function adminLogout() {
+                if (confirm('Admin paneldan chiqishni tasdiqlaysizmi?')) {
+                    // Clear session
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    
+                    // Redirect to main page
+                    window.location.href = '/index.html';
+                }
+            }
+
+            // Search on Enter
+            document.getElementById('userSearchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchUsers();
+                }
+            });
+
+            // Make functions globally accessible
+            window.viewUserDetails = viewUserDetails;
+            window.toggleUserStatus = toggleUserStatus;
+            window.deleteUser = deleteUser;
+            window.loadUsers = loadUsers;
+            window.searchUsers = searchUsers;
+
+            // Admin logout button event
+            document.getElementById('adminLogoutBtn').addEventListener('click', adminLogout);
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', loadUserSession);
+        })();
+    </script>
+</body>
+</html>

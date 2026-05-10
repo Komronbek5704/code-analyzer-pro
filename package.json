@@ -1,0 +1,25 @@
+{
+  "name": "code-analyzer-pro",
+  "version": "1.0.0",
+  "description": "CodeAnalyzer Pro - Professional Code Analysis System",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
+    "build": "echo 'Build completed'"
+  },
+  "keywords": ["code-analysis", "security", "nodejs", "express", "vercel"],
+  "author": "CodeAnalyzer Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^6.0.1",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
