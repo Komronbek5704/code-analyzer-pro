@@ -1,11 +1,33 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const sqlite3 = require('sqlite3').verbose();
 
 const router = express.Router();
 
-// Database setup (same as auth.js)
-const db = new sqlite3.Database(':memory:');
+// Mock data for Vercel
+const mockUsers = [
+    {
+        id: 2,
+        username: 'user1',
+        email: 'user1@example.com',
+        role: 'user',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+        total_analyses: 15,
+        total_errors: 3
+    },
+    {
+        id: 3,
+        username: 'user2',
+        email: 'user2@example.com',
+        role: 'user',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+        total_analyses: 8,
+        total_errors: 1
+    }
+];
 
 // Authentication middleware
 const authenticateToken = (req, res, next) => {
@@ -51,31 +73,6 @@ router.get('/dashboard', (req, res) => {
 
 // Get users
 router.get('/users', (req, res) => {
-    const mockUsers = [
-        {
-            id: 1,
-            username: 'user1',
-            email: 'user1@example.com',
-            role: 'user',
-            is_active: true,
-            created_at: new Date().toISOString(),
-            last_login: new Date().toISOString(),
-            total_analyses: 15,
-            total_errors: 3
-        },
-        {
-            id: 2,
-            username: 'user2',
-            email: 'user2@example.com',
-            role: 'user',
-            is_active: true,
-            created_at: new Date().toISOString(),
-            last_login: new Date().toISOString(),
-            total_analyses: 8,
-            total_errors: 1
-        }
-    ];
-    
     res.json({
         users: mockUsers,
         pagination: {

@@ -4,38 +4,25 @@ const helmet = require('helmet');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const sqlite3 = require('sqlite3').verbose();
 
-const app = express();
 const router = express.Router();
 
-// Database setup
-const db = new sqlite3.Database(':memory:');
+// Simple in-memory storage for Vercel
+const users = new Map();
+let userIdCounter = 1;
 
-// Initialize tables
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        role TEXT DEFAULT 'user',
-        is_active BOOLEAN DEFAULT 1,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        last_login DATETIME
-    )`);
-    
-    // Create default admin user
-    const adminPassword = bcrypt.hashSync('admin123', 10);
-    db.run(`INSERT OR IGNORE INTO users (username, email, password_hash, role) 
-            VALUES ('admin', 'admin@codeanalyzer.com', ?, 'admin')`, [adminPassword]);
+// Initialize default admin user
+const adminPassword = bcrypt.hashSync('admin123', 10);
+users.set('admin', {
+    id: userIdCounter++,
+    username: 'admin',
+    email: 'admin@codeanalyzer.com',
+    password_hash: adminPassword,
+    role: 'admin',
+    is_active: true,
+    created_at: new Date().toISOString(),
+    last_login: null
 });
-
-// Middleware
-app.use(cors());
-app.use(helmet());
-app.use(express.json());
 
 // Validation middleware
 const handleValidationErrors = (req, res, next) => {
@@ -59,40 +46,44 @@ router.post('/register', [
         const { username, email, password } = req.body;
         
         // Check if user exists
-        db.get('SELECT id FROM users WHERE username = ? OR email = ?', [username, email], (err, row) => {
-            if (err) {
-                return res.status(500).json({ error: 'Database error' });
+        const existingUser = Array.from(users.values()).find(u => 
+            u.username === username || u.email === email
+        );
+        
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
+        
+        // Create user
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        const newUser = {
+            id: userIdCounter++,
+            username,
+            email,
+            password_hash: hashedPassword,
+            role: 'user',
+            is_active: true,
+            created_at: new Date().toISOString(),
+            last_login: null
+        };
+        
+        users.set(username, newUser);
+        
+        const token = jwt.sign(
+            { userId: newUser.id, username, role: 'user' },
+            process.env.JWT_SECRET || 'fallback_secret',
+            { expiresIn: '7d' }
+        );
+        
+        res.status(201).json({
+            message: 'User registered successfully',
+            token: token,
+            user: {
+                id: newUser.id,
+                username,
+                email,
+                role: 'user'
             }
-            
-            if (row) {
-                return res.status(400).json({ error: 'User already exists' });
-            }
-            
-            // Create user
-            const hashedPassword = bcrypt.hashSync(password, 10);
-            db.run(`INSERT INTO users (username, email, password_hash) 
-                    VALUES (?, ?, ?)`, [username, email, hashedPassword], function(err) {
-                if (err) {
-                    return res.status(500).json({ error: 'Error creating user' });
-                }
-                
-                const token = jwt.sign(
-                    { userId: this.lastID, username, role: 'user' },
-                    process.env.JWT_SECRET || 'fallback_secret',
-                    { expiresIn: '7d' }
-                );
-                
-                res.status(201).json({
-                    message: 'User registered successfully',
-                    token: token,
-                    user: {
-                        id: this.lastID,
-                        username,
-                        email,
-                        role: 'user'
-                    }
-                });
-            });
         });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
@@ -107,42 +98,40 @@ router.post('/login', [
     try {
         const { username, password } = req.body;
         
-        db.get('SELECT * FROM users WHERE username = ? OR email = ?', [username, username], (err, user) => {
-            if (err) {
-                return res.status(500).json({ error: 'Database error' });
+        const user = Array.from(users.values()).find(u => 
+            u.username === username || u.email === username
+        );
+        
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        
+        if (!user.is_active) {
+            return res.status(401).json({ error: 'Account is deactivated' });
+        }
+        
+        if (!bcrypt.compareSync(password, user.password_hash)) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        
+        // Update last login
+        user.last_login = new Date().toISOString();
+        
+        const token = jwt.sign(
+            { userId: user.id, username: user.username, role: user.role },
+            process.env.JWT_SECRET || 'fallback_secret',
+            { expiresIn: '7d' }
+        );
+        
+        res.json({
+            message: 'Login successful',
+            token: token,
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role
             }
-            
-            if (!user) {
-                return res.status(401).json({ error: 'Invalid credentials' });
-            }
-            
-            if (!user.is_active) {
-                return res.status(401).json({ error: 'Account is deactivated' });
-            }
-            
-            if (!bcrypt.compareSync(password, user.password_hash)) {
-                return res.status(401).json({ error: 'Invalid credentials' });
-            }
-            
-            // Update last login
-            db.run('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
-            
-            const token = jwt.sign(
-                { userId: user.id, username: user.username, role: user.role },
-                process.env.JWT_SECRET || 'fallback_secret',
-                { expiresIn: '7d' }
-            );
-            
-            res.json({
-                message: 'Login successful',
-                token: token,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    role: user.role
-                }
-            });
         });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
