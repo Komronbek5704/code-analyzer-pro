@@ -8,12 +8,24 @@
   ],
   "routes": [
     {
+      "src": "/api/auth/register",
+      "dest": "/api/auth/register.js"
+    },
+    {
+      "src": "/api/auth/login",
+      "dest": "/api/auth/login.js"
+    },
+    {
+      "src": "/api/admin/users",
+      "dest": "/api/admin/users.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/$1.html"
+      "dest": "/$1"
     }
   ],
   "env": {
