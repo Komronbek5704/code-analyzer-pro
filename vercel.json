@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "buildCommand": "npm install",
+  "outputDirectory": "public",
+  "installCommand": "npm install",
+  "framework": null,
   "routes": [
     {
       "src": "/api/auth/register",
